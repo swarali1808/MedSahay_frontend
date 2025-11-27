@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaCheck, FaMobileAlt, FaHeadset, FaShieldAlt } from 'react-icons/fa';
 import { MdPersonOutline } from 'react-icons/md';
-import doctorsImage from '../assets/CommonImgs/Signindocs.svg'; // Placeholder image, you'll import the actual image
-import logoImage from '../assets/CommonImgs/HorizontalLogo.png'; // Placeholder logo image
+import doctorsImage from '../assets/CommonImgs/Signindocs.svg';
+import logoImage from '../assets/CommonImgs/HorizontalLogo.png';
 
 const SignInPage = () => {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const SignInPage = () => {
     e.preventDefault();
     
     try {
-      const response = await fetch('http://localhost:8000/api/v1/auth/login', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,14 +47,14 @@ const SignInPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Store the token in localStorage
+        // Store the token and user data in localStorage
         localStorage.setItem('access_token', data.access_token);
         localStorage.setItem('user', JSON.stringify(data.user));
         
         console.log('Login successful:', data);
         alert('Login successful!');
         
-        // Navigate to dashboard based on user role
+        // Navigate to dashboard based on user role from API response
         const userRole = data.user.role.toLowerCase();
         if (userRole === 'doctor') {
           navigate('/doctor/dashboard');
@@ -65,8 +65,8 @@ const SignInPage = () => {
           navigate('/');
         }
       } else {
-        console.error('Login failed:', data.detail);
-        alert(data.detail || 'Login failed. Please check your credentials.');
+        console.error('Login failed:', data.detail || data.message);
+        alert(data.detail || data.message || 'Login failed. Please check your credentials.');
       }
     } catch (error) {
       console.error('Network error:', error);

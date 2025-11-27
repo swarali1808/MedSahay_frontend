@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaCheck } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaCheck, FaPhone } from 'react-icons/fa';
 import { MdPersonOutline } from 'react-icons/md';
 import doctorImage from '../assets/CommonImgs/Signupdoc.png'; // Placeholder image, replace with actual image path
 import logoImage from '../assets/CommonImgs/HorizontalLogo.png'; // Placeholder logo, replace with actual logo path
@@ -14,6 +14,7 @@ const SignupPage = () => {
     password: '',
     confirmPassword: '',
     role: '',
+    phone_number: '',
     agreeToTerms: false
   });
 
@@ -35,7 +36,7 @@ const SignupPage = () => {
     e.preventDefault();
     
     try {
-      const response = await fetch('http://localhost:8000/api/v1/auth/signup', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,6 +47,7 @@ const SignupPage = () => {
           password: formData.password,
           confirmPassword: formData.confirmPassword,
           role: formData.role,
+          phone_number: formData.phone_number,
           agreeToTerms: formData.agreeToTerms
         }),
       });
@@ -118,6 +120,23 @@ const SignupPage = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Enter your email"
+                className="w-full px-4 py-4 border border-gray-100 bg-gray-50 rounded-md focus:outline-none focus:border-cyan-500 text-gray-600"
+                required
+              />
+            </div>
+
+            {/* Phone Number Input */}
+            <div className="mb-4">
+              <label className="block text-sm text-gray-700 flex items-center gap-2 mb-1">
+                <FaPhone className="text-cyan-500" />
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                name="phone_number"
+                value={formData.phone_number}
+                onChange={handleChange}
+                placeholder="+911234567890"
                 className="w-full px-4 py-4 border border-gray-100 bg-gray-50 rounded-md focus:outline-none focus:border-cyan-500 text-gray-600"
                 required
               />
